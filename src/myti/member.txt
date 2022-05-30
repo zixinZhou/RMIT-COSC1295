@@ -1,0 +1,4 @@
+aa,senior,zixin,12345@gmail.com,20.0
+xl,adult,Vu Mai,vuhuy.mai@rmit.edu.au,45.0
+lc,senior,Lawrence Cavedon,lawrence.cavedon@rmit.edu.au,50.0
+zx,adult,zixin,32456@qq.com,0.0
