@@ -1,16 +1,21 @@
 package myti;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import gui.DisplayReport;
+import javafx.collections.ObservableList;
 
 
 public class User {
@@ -93,11 +98,17 @@ public class User {
 
 	public static void savememberfile(String filename, String content) {
 		try {
-			RandomAccessFile randomFile = new RandomAccessFile(filename, "rw");
-			long fileLength = randomFile.length();
-			randomFile.seek(fileLength);
-			randomFile.writeBytes("\n"+content);
-			randomFile.close();
+			File check = new File(filename);
+			if(!check.exists()){
+				check.createNewFile();
+			}else {
+				RandomAccessFile randomFile = new RandomAccessFile(filename, "rw");
+				long fileLength = randomFile.length();
+				randomFile.seek(fileLength);
+				randomFile.writeBytes("\n"+content);
+				randomFile.close();
+			}
+	        
 			
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -108,25 +119,39 @@ public class User {
 	/*rewrite member txt file with hashmap
 	 * for update credit
 	 */
-	public static void rewriteMemberFile() {
+	public static void rewriteMemberFile(String filename) {
 		try {
-			FileWriter fw = new FileWriter("src\\fileio\\member.txt",false);
-			for(String item : memberslist.keySet()){
-		    	String Content = memberslist.get(item).getid()+":"+memberslist.get(item).gettype()+":"+memberslist.get(item).getname()+":"+memberslist.get(item).getemail()+":"+memberslist.get(item).getcredit();
-		    	fw.write(Content+"\r\n");
-		    	
+			File check = new File(filename);
+			if(!check.exists()){
+				check.createNewFile();
+			}else {
+				FileWriter fw = new FileWriter(filename,false);
+				for(String item : memberslist.keySet()){
+			    	String Content = memberslist.get(item).getid()+":"+memberslist.get(item).gettype()+":"+memberslist.get(item).getname()+":"+memberslist.get(item).getemail()+":"+memberslist.get(item).getcredit();
+			    	fw.write(Content+"\r\n");
 			}
 			fw.close();
-			
-			try {
-				FileChannel open = FileChannel.open(Paths.get("member.txt"), StandardOpenOption.WRITE);
-				open.truncate(open.size()-2);
-			}catch(IOException e) {
-				System.out.println("An IO error occurred.");
-				e.printStackTrace();
 			}
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	
+	public static void writeReportFile() {
+		try {
+			FileWriter fw = new FileWriter("src\\fileio\\report.txt",false);
+			for (String x : DisplayReport.report) { //using for loop to print the record
+		    	fw.write(x+"\r\n");
+			}
+			fw.close();
+	
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+
+
 }

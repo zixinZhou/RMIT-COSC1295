@@ -188,7 +188,7 @@ public static void rechargecredit() throws IOException {
     		System.out.println("The ID does not exit!");
     	}
     	}
-    	User.rewriteMemberFile();
+    	User.rewriteMemberFile("src\\fileio\\input.txt");
     } 
 
 

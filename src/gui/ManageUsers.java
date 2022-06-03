@@ -1,6 +1,11 @@
 package gui;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,7 +37,7 @@ public class ManageUsers extends Application{
 	String content;
 	final static double creditLimit =100.0;
 	final static int multipleLimit = 5;
-
+	String contentinput;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -42,7 +47,7 @@ public class ManageUsers extends Application{
 	     */
 	    GridPane user = new GridPane();
 	 	ChoiceBox<String> type = new ChoiceBox<String>();
-	 	type.getItems().addAll("Adult", "Senior", "Junoir");
+	 	type.getItems().addAll("adult", "senior", "junoir");
 	 	
 	    //create grid pand for register
 	 	Label lefttitle = new Label("Create New User");
@@ -94,11 +99,10 @@ public class ManageUsers extends Application{
 		ListView<String> list = new ListView<String>();
 		list.setPrefWidth(30);
 		list.setPrefHeight(30);
-	    User.readmemberfile("src\\fileio\\member.txt");
+		User.readmemberfile("src\\fileio\\input.txt");
 		list.getItems().addAll(User.idlist);
 		list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		
-
+	    
 	//	list.setItems(items);		
 		Label remain = new Label("Remain");
 		Label remainbox = new Label();		
@@ -137,8 +141,19 @@ public class ManageUsers extends Application{
 		separator.setPadding(new Insets(1,300,55,280));
 		pane.getChildren().add(separator);
 		
+		
+		//create action on list click to show credit
+		list.setOnMouseClicked(e ->{
+			String click = list.getSelectionModel().getSelectedItem();
+			if (click!=null) {
+			remainbox.setText("The credit for "+click+" is $"+User.memberslist.get(click).getcredit());
+			}
+		});
+		
 		// read member information form text file		
-		User.readmemberfile("src\\fileio\\member.txt");
+		User.readmemberfile("src\\fileio\\input.txt");
+		
+		
 		// create new user button action
 		createbutton.setOnAction(e -> {
 				String ID = fieldid.getText();
@@ -151,25 +166,30 @@ public class ManageUsers extends Application{
 					}else if (ID.trim().length() ==0 ||name.trim().length() == 0 || email.trim().length()==0 || Type.isEmpty()) {
 					message.setText("Cannot enter empty!");
 				}else {
-					content =ID+":"+type.getValue()+":"+name+":"+email+":"+"0";				
+					
+					User user1 = new User(ID, type.getValue(),name, email, "0");
+					User.memberslist.put(user1.getid(), user1);
 					message.setText("create succed!");
-					break;
+					User.idlist.add(ID);
+					list.getItems().add(ID);
+					list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+			        break;
 				}
 				}
+				// add new id immedately into list view
+				//User.idlist.add(ID);
+				//list.getItems().add(ID);
+				//list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+				
 		});
 		
-		// create action on save new user informaiton into file
-		savebutton.setOnAction(e ->{
-			User.savememberfile("src\\fileio\\member.txt", content);
-			
-		});
-		
-		User.readmemberfile("src\\fileio\\member.txt");
-		// create action for add credit button
-		add.setOnAction(e ->{
+        // create action handler for add button 
+		add.setOnAction(e ->{	
+			// create variable to save enter 
 			SelectionModel<String> userlist = list.getSelectionModel();
 			String ID = userlist.getSelectedItem(); 
 			String creditinput = creditbox.getText();
+			   // check the enter is valid or not
 			   for (String item : User.memberslist.keySet()){
 				   if(User.memberslist.containsKey(ID)) {
 						Double credit1 = Double.parseDouble(User.memberslist.get(ID).getcredit());
@@ -182,7 +202,7 @@ public class ManageUsers extends Application{
 						message1.setText("cannot enter empty");
 					}else {
 						String totalcredit = String.valueOf(credit1+creditput);
-						User.memberslist.get(ID).setcredit(totalcredit);	
+						User.memberslist.get(ID).setcredit(totalcredit);	// update remain credit
 						message1.setText("The remain for "+User.memberslist.get(ID).getid()+" is $"+totalcredit);				
 						break;
 					}
@@ -190,10 +210,16 @@ public class ManageUsers extends Application{
 				   message1.setText("ID cannot be empty");
 			   }
 			}
-			   User.rewriteMemberFile();
+			   
 		});
-						
 		
+        // create action handler for save button to create output file
+		savebutton.setOnAction(e ->{
+			User.rewriteMemberFile("src\\fileio\\input.txt"); // update in input file
+			User.rewriteMemberFile("src\\fileio\\output.txt"); // put into output file
+		});
+		
+		// create stage scene
 		Pane root = new Pane();
 		root.getChildren().add(pane);
 		root.getChildren().add(creditpane);
@@ -205,8 +231,20 @@ public class ManageUsers extends Application{
 }
 		
    
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 	    Application.launch(args);
+		 
+		/*File f1 = new File(args[0]);
+		File f2 = new File(args[1]);
+		
+	    InputStream is1 = new FileInputStream(f1);
+	    InputStream is2 = new FileInputStream(f2);	
+	    int byteReaded;
+	    if (args[0].length()==0 || args[1].length()==0) {
+	    	System.out.println("The file does not exist!");
+	    }else {
+	    	  Application.launch(args);
+	    }*/
     }
 
 }

@@ -1,5 +1,9 @@
 package gui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +56,7 @@ public class CreateJourney extends Application{
 		ListView<String> list = new ListView<String>();
 		list.setPrefWidth(30);
 		list.setPrefHeight(30);
-	    User.readmemberfile("src\\fileio\\member.txt");
+	    User.readmemberfile("src\\fileio\\output.txt");
 		list.getItems().addAll(User.idlist);
 		list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		
@@ -136,8 +140,10 @@ public class CreateJourney extends Application{
 		separator.setPadding(new Insets(1,300,1,300));
 		pane.getChildren().add(separator);
 		
+		
+
 		// create action for purchase button
-		User.readmemberfile("src\\fileio\\member.txt");
+		User.readmemberfile("src\\fileio\\output.txt");
 		purchase.setOnAction(e -> {
 			SelectionModel<String> userlist = list.getSelectionModel();
 			String ID = userlist.getSelectedItem(); 
@@ -171,14 +177,15 @@ public class CreateJourney extends Application{
 		    	}else if (!arrivaltime.matches("-?[0-9]+.?[0-9]*")) {
 		    		textbox.setText("The Start and end time must be number!");
 		    		
-		    	}else if(Double.parseDouble(starttime) % 1000 > 359 || Double.parseDouble(starttime) % 100 > 60) {
-		    		textbox.setText("Invalid input of time");
-		    	}else if(Double.parseDouble(arrivaltime) % 1000 > 359 || Double.parseDouble(arrivaltime) % 100 > 60) {
-		    		textbox.setText("Invalid input of time");
+		    	//}else if(Double.parseDouble(starttime) % 1000 > 359 || Double.parseDouble(starttime) % 100 > 60) {
+		    		//textbox.setText("Invalid input of time");
+		    	//}//else if(Double.parseDouble(arrivaltime) % 1000 > 359 || Double.parseDouble(arrivaltime) % 100 > 60) {
+		    		//textbox.setText("Invalid input of time");
 		    	}else {
 		    		durationtime = Double.parseDouble(arrivaltime) - Double.parseDouble(starttime);
 		    		Math.abs(durationtime);
 		    		zone1 = stationname.get(startstation)+stationname.get(endstation);
+		    		
 		    		break;
 		    	}
 		    }
@@ -207,80 +214,97 @@ public class CreateJourney extends Application{
 		    	allJourneyInfo.put(ac.getremain(), ac);
 		    	allJourneyInfo.put(ac.getprice(), ac);
 		    	
-		    	for(String item1 : User.memberslist.keySet()){
+		    	for(String item : User.memberslist.keySet()){
 		            remain = Double.parseDouble(User.memberslist.get(ID).getcredit());
 		            
 		    	}
-		    	    if(remain < TravelPass.getprice()) {
-		    		    textbox.setText("The remain is not enough!");
-		    	    }else {
+		    	if(remain < TravelPass.getprice()) {
+		    		textbox.setText("The remain is not enough!");
+		    	}else {
 		    	    	
-		    		    for(String item2 : allJourneyInfo.keySet()){
+		    		for(String item : allJourneyInfo.keySet()){
 		    		    	
-		    			    if(!allJourneyInfo.containsKey(ID) || allJourneyInfo.containsKey(ID) & !allJourneyInfo.get(ID).getday().equals(inputday)) {	
-		    			    	TravelPass tp = null;
-		                        tp = new TravelPass(zone1, durationtime,ID,inputday);
+		    			if(!allJourneyInfo.containsKey(ID) || (allJourneyInfo.containsKey(ID) & !allJourneyInfo.get(ID).getday().equals(inputday))) {	
+		    			    TravelPass tp = null;
+		                    tp = new TravelPass(zone1, durationtime,ID,inputday);
 		                        
-		    				    String remain3 = String.valueOf(remain);
-		    				    String price3 = String.valueOf(TravelPass.getprice());
-		    				    
-		    				    Account ac1 = new Account(ID, startstation, endstation, inputday, starttime,arrivaltime,remain3,price3);
-		    				    allJourneyInfo.put(ac.getid(), ac);
-		    				    allJourneyInfo.put(ac.getstartstation(),ac);
-		    				    allJourneyInfo.put(ac.getendstation(),ac);
-		    				    allJourneyInfo.put(ac.getday(),ac);
-		    				    allJourneyInfo.put(ac.getstarttime(),ac);
-		    				    allJourneyInfo.put(ac.getarrivaltime(),ac);
-		    				    allJourneyInfo.put(ac.getremain(),ac);
-		    				    allJourneyInfo.put(ac.getprice(),ac);
-		    				    double validtime=Double.parseDouble(starttime);
-		    				    allJourneyInfo.put(ac.getid(), ac);
-		    				    checkremain.put(ID, remain);
-		    				    checkprice.put(ID, TravelPass.getprice());
-		    				    String content = TravelPass.getduration()+" "+TravelPass.getzone()+" Travel Pass purchased for "+ID+" for $"+TravelPass.getprice()+"\n"+"Valid until "+(validtime+200)+"\n"+"Credit remianing for "+ID+": $"+remain+"\n";
-		    				    textbox.setText(content);
-		    				    DisplayReport.report.add("ID:"+ID+","+"starttime:"+starttime+","+"arrivaltime:"+arrivaltime+","+"startstation:"+startstation+","+"endstation:"+endstation);
+		    				String remain3 = String.valueOf(CreateJourney.remain);
+		    				String price3 = String.valueOf(TravelPass.getprice());
+		    				Account ac1 = new Account(ID, startstation, endstation, inputday, starttime,arrivaltime,remain3,price3);
+		    				allJourneyInfo.put(ac1.getid(), ac1);
+		    			    allJourneyInfo.put(ac1.getstartstation(),ac1);
+		    				allJourneyInfo.put(ac1.getendstation(),ac1);
+		    				allJourneyInfo.put(ac1.getday(),ac1);
+		    				allJourneyInfo.put(ac1.getstarttime(),ac1);
+		    				allJourneyInfo.put(ac1.getarrivaltime(),ac1);
+		    				allJourneyInfo.put(ac1.getremain(),ac1);
+		    				allJourneyInfo.put(ac1.getprice(),ac1);
+		    				double validtime=Double.parseDouble(starttime);
+		    				allJourneyInfo.put(ac1.getid(), ac1);
+		    				checkremain.put(ID, CreateJourney.remain);
+		    				checkprice.put(ID, TravelPass.getprice());
+		    				String content = TravelPass.getduration()+" "+TravelPass.getzone()+" Travel Pass purchased for "+ID+" for $"+TravelPass.getprice()+"\n"+"Valid until "+(validtime+200)+"\n"+"Credit remianing for "+ID+": $"+CreateJourney.remain+"\n";
+		    				textbox.setText(content);
+		    				DisplayReport.report.add("ID:"+ID+","+"starttime:"+starttime+","+"arrivaltime:"+arrivaltime+","+"startstation:"+startstation+","+"endstation:"+endstation);
+		    				User.writeReportFile();
+		    				String remain1 = String.valueOf(remain);
+		    				User.memberslist.get(ID).setcredit(remain1);
+		    				break;
 		    				
-		    				    break;
-		    				
-		    			    }else if(allJourneyInfo.containsKey(ID) & allJourneyInfo.get(ID).getday().equals(inputday)){
+		    			}else if(allJourneyInfo.containsKey(ID) & allJourneyInfo.get(ID).getday().equals(inputday)){
 		    				    //TravelPass tp2 = null;
 		    				   // tp2 = new TravelPass(durationtime,zone1,starttime, arrivaltime, ID, inputday);
-		    			    	textbox.setText("yes");
-		    			    	TravelPass.travelPass(durationtime,zone1,starttime, arrivaltime, ID, inputday);
-		    				    if (TravelPass.returncontent == "1") {
-		    					    textbox.setText("You don't need to pay on Sunday!"+"\n"+"Your remain credit is "+CreateJourney.remain);
+		    			    	
+		    			    TravelPass.travelPass(durationtime,zone1,starttime, arrivaltime, ID, inputday);
+		    				if (TravelPass.returncontent == "1") {
+		    					textbox.setText("You don't need to pay on Sunday!"+"\n"+"Your remain credit is "+CreateJourney.remain);
 		    					
-		    			  	    }else if(TravelPass.returncontent=="2") {
-		    					    String content1="The travel pass has already update to All Day Pass! The cost is: $"+df.format(TravelPass.price)+" with discount"+"\n"+"Valid until"+TravelPass.validtime+"\n"+"Your remain credit is "+CreateJourney.remain;
-		    				        textbox.setText(content1);
+		    			  	}else if(TravelPass.returncontent=="2") {
+		    					String content1="The travel pass has already update to All Day Pass! The cost is: $"+df.format(TravelPass.price)+" with discount"+"\n"
+		    			  	+"Valid until"+TravelPass.validtime+"\n"
+		    				+"Your remain credit is "+CreateJourney.remain;
+		    				    textbox.setText(content1);
 		    				         
-		    			  	    }else if (TravelPass.returncontent=="3") {
-		    				        textbox.setText("The travel pass has already update to All Day Pass! The cost is: $"+TravelPass.price+"\n"+"Your remain credit is "+CreateJourney.remain);
+		    			  	}else if (TravelPass.returncontent=="3") {
+		    				    textbox.setText("The travel pass has already update to All Day Pass! The cost is: $"+TravelPass.price+"\n"
+		    			  	+"Your remain credit is "+CreateJourney.remain);
 		    			  	    	
-		    				    }else if(TravelPass.returncontent=="4"){
-		    					    textbox.setText("The All Day travel pass is still valid! You don't need to pay"+"\n"+"Your remain credit is "+CreateJourney.remain);
+		    				}else if(TravelPass.returncontent=="4"){
+		    					textbox.setText("The All Day travel pass is still valid! You don't need to pay"+"\n"
+		    				+"Your remain credit is "+CreateJourney.remain);
 		    				    
-		    				    }else if(TravelPass.returncontent=="5"){
-		    	 	 		 	    textbox.setText("The two hour travel pass still valid! You don't need to pay"+"\n"+"Your remain credit is "+CreateJourney.remain);
-		    				        break;
-		    				    }
+		    				}else if(TravelPass.returncontent=="5"){
+		    	 	 		 	textbox.setText("The two hour travel pass still valid! You don't need to pay"+"\n"
+		    				+"Your remain credit is "+CreateJourney.remain);
+		    				    
+		    				}else if (TravelPass.returncontent=="6") {
+		    					textbox.setText(durationtime+zone1 +"Travel Pass purchased for"+" "+ID+" "+"for"+" "+"$"+df.format(TravelPass.price)+" with discount."+"\n"
+		    				+"Valid until"+TravelPass.validtime+"\n"
+		    							+"Credit remianing for"+" "+ID+" "+":"+"$"+CreateJourney.remain);
+		    				
+		    				}else if (TravelPass.returncontent=="7") {
+		    					textbox.setText(durationtime+zone1 +"Travel Pass purchased for "+ID+" for $"+df.format(TravelPass.price)+"\n"
+		    				+"Valid until"+TravelPass.validtime+"\n"
+		    			    +"Credit remianing for "+ID+" :$"+CreateJourney.remain);
+		    				}
 		
-		    				String remain2 = String.valueOf(remain);
-		    				String price2 = String.valueOf(TravelPass.getprice());
-		    				Account ac2 = new Account(ID, startstation, endstation, inputday, starttime,arrivaltime,remain2,price2);
-		    				allJourneyInfo.put(ac.getid(), ac);
-		    				allJourneyInfo.put(ac.getstartstation(),ac);
-		    				allJourneyInfo.put(ac.getendstation(),ac);
-		    				allJourneyInfo.put(ac.getday(),ac);
-		    				allJourneyInfo.put(ac.getstarttime(),ac);
-		    				allJourneyInfo.put(ac.getarrivaltime(),ac);
-		    				allJourneyInfo.put(ac.getremain(),ac);
-		    				allJourneyInfo.put(ac.getprice(),ac);
-		    				checkremain.put(ID, remain);
+		    		        String remain2 = String.valueOf(CreateJourney.remain);
+		    			    String price2 = String.valueOf(TravelPass.getprice());
+		    			    Account ac1 = new Account(ID, startstation, endstation, inputday, starttime,arrivaltime,remain2,price2);
+		    			    allJourneyInfo.put(ac1.getid(), ac1);
+		    				allJourneyInfo.put(ac1.getstartstation(),ac1);
+		    				allJourneyInfo.put(ac1.getendstation(),ac1);
+		    				allJourneyInfo.put(ac1.getday(),ac1);
+		    				allJourneyInfo.put(ac1.getstarttime(),ac1);
+		    				allJourneyInfo.put(ac1.getarrivaltime(),ac1);
+		    				allJourneyInfo.put(ac1.getremain(),ac1);
+		    				allJourneyInfo.put(ac1.getprice(),ac1);
+		    				checkremain.put(ID, CreateJourney.remain);
 		    				checkprice.put(ID, TravelPass.getprice());
 		    				DisplayReport.report.add("ID:"+ID+","+"starttime:"+starttime+","+"arrivaltime:"+arrivaltime+","+"startstation:"+startstation+","+"endstation:"+endstation);
-		    				
+		    				User.writeReportFile();
+		    				String remain1 = String.valueOf(remain);
+		    				User.memberslist.get(ID).setcredit(remain1);
 		    				break;
 		    			}	
 
@@ -289,7 +313,10 @@ public class CreateJourney extends Application{
 		    
 		});
 		
-		
+		savebutton.setOnAction(e ->{
+			User.rewriteMemberFile("src\\fileio\\input.txt"); // update in input file
+			User.rewriteMemberFile("src\\fileio\\output.txt"); // put into output file
+		});
 	 	
 		Pane root = new Pane();
 	    root.getChildren().add(pane);
@@ -301,8 +328,22 @@ public class CreateJourney extends Application{
 		primaryStage.show();
 }
 		
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 	    Application.launch(args);
+	 
+		/*File f1 = new File(args[0]);
+		File f2 = new File(args[1]);
+		
+	    InputStream is1 = new FileInputStream(f1);
+	    InputStream is2 = new FileInputStream(f2);	
+	    int byteReaded;
+	    if (args[0].length()==0 || args[1].length()==0) {
+	    	System.out.println("The file does not exist!");
+	    }else {
+	    	  Application.launch(args);
+	    }*/
     }
+	    
+    
 
 }

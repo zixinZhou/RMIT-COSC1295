@@ -117,8 +117,8 @@ public class TravelPass{
  	    Double thisst=0.0;
  		Double thisar=0.0;
  	    Double lastst=0.0;
- 		Double lastar=0.0;
-
+        Double lastar = 0.0;
+        
  		for(String item : CreateJourney.allJourneyInfo.keySet()){
  			String start = CreateJourney.allJourneyInfo.get(ID).getstarttime();
  			String arrivel = CreateJourney.allJourneyInfo.get(ID).getarrivaltime();
@@ -135,35 +135,38 @@ public class TravelPass{
 
  			lastcost = CreateJourney.checkprice.get(ID);
  			if(lastcost > allDayZone1) {
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain = rm- 0;
  	 				//CreateJourney.textbox.setText("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 				
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				price = lastcost-(allDayZone1 * discountrate);
  	 				CreateJourney.remain = rm - price;
  	 				//System.out.println("The travel pass has already update to All Day Pass! The cost is: $"+df.format(price)+" "+"with discount");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "2";
+ 	 			
  	 			}else {
  	 				price = lastcost - allDayZone1;
  	 				CreateJourney.remain = rm - price; // calculate the remain
  	 				//System.out.println("The travel pass has already update to All Day Pass! The cost is: $"+price);
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "3";
+ 	 			
  	 			}
  			}else if (lastcost < allDayZone1 ) {//update travel to all day and pay for difference between price
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain = rm -0;
  	 				//System.out.println("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				
  	 				price = (allDayZone1 * discountrate) - lastcost;
  	 				CreateJourney.remain = rm - price;
@@ -171,12 +174,14 @@ public class TravelPass{
  	 			    //System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "2";
  	 				
+ 	 				
  	 			}else {
  	 				price = allDayZone1 - lastcost;
  	 				CreateJourney.remain = rm - price; // calculate the remain
  	 				//System.out.println("The travel pass has already update to All Day Pass! The cost is: $"+price);
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "3";
+ 	 				
  	 			}
 
  			}else if (lastcost == allDayZone1) {// keep the same price and remian with all day travel pass
@@ -185,6 +190,7 @@ public class TravelPass{
  				//System.out.println("The All Day travel pass is still valid! You don't need to pay");	
  				//System.out.println("Your remain credit is "+CreateJourney.remain);
  				returncontent = "4";
+ 				
  			}
  			
         
@@ -202,14 +208,14 @@ public class TravelPass{
 		 			returncontent ="5";
 		 			
  			}else if((lastcost+twoHourZone1)>allDayZone1 & thisar>(lastst +200)) { //update to all day travel and pay for difference
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain= rm - 0;
  	 				//System.out.println("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				price = (lastcost+twoHourZone1)-(allDayZone1 * discountrate);
  	 				
  	 				CreateJourney.remain = rm - price;
@@ -227,21 +233,22 @@ public class TravelPass{
  	 			}
  			
  			}else if ((lastcost+twoHourZone1)<allDayZone1) { // pay for 2 twohour travel
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain = rm - 0;
  	 				//System.out.println("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				price = twoHourZone1 * discountrate;
  	 				CreateJourney.remain= rm - price;
  	 				validtime = thisst + 200;
  					//System.out.println(durationtime +zone1 +"Travel Pass purchased for"+" "+ID+" "+"for"+" "+"$"+df.format(price)+" with discount.");
  					//System.out.println("Valid until"+validtime);
  					//System.out.println("Credit remianing for"+" "+ID+" "+":"+"$"+CreateJourney.remain);
- 	 				returncontent = "2";
+ 					returncontent = "6";
+ 					
  	 				
  	 			}else {
  	 				price = twoHourZone1;
@@ -250,7 +257,8 @@ public class TravelPass{
  					//System.out.println(durationtime +zone1 +"Travel Pass purchased for "+ID+" for $"+df.format(price));
  					//System.out.println("Valid until"+validtime);
  					//System.out.println("Credit remianing for "+ID+" :$"+CreateJourney.remain);
- 	 				returncontent = "3";
+ 	 				returncontent = "7";
+ 	 				
  	 			}
 
  			}else if(lastcost == allDayZone1) {// keep the same price and remian with all day travel pass
@@ -259,6 +267,7 @@ public class TravelPass{
  	 			//	System.out.println("The All Day travel pass is still valid! You don't need to pay");	
  	 			   // System.out.println("Your remain credit is "+CreateJourney.remain);
  	 			    returncontent = "4";
+ 	 			  
  			}
  			
  	        
@@ -269,19 +278,20 @@ public class TravelPass{
 
  			lastcost = CreateJourney.checkprice.get(ID);
  			if (lastcost < allDayZone12 ) {//update travel to all day and pay for difference between price
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain = rm- 0;
  	 				//System.out.println("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				price = (allDayZone12 * discountrate) - lastcost;
  	 				CreateJourney.remain = rm - price;
  	 				//System.out.println("The travel pass has already update to All Day Pass! The cost is: $"+df.format(price)+" with discount.");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "2";
+ 	 				
  	 				
  	 			}else {
  	 				price = allDayZone12 - lastcost;
@@ -297,6 +307,7 @@ public class TravelPass{
  	 				//System.out.println("The All Day travel pass is still valid! You don't need to pay");	
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "4";
+ 	 				
  	 			}
  			
  			
@@ -313,16 +324,17 @@ public class TravelPass{
  	 		 	//System.out.println("The two hour travel pass still valid! You don't need to pay");
  	 		   // System.out.println("Your remain credit is "+CreateJourney.remain);
  	 		 	    returncontent ="5";
+ 	 		 	 
  				
  			}else if ((lastcost+twoHourZone12) > allDayZone12 & thisar > (lastst+200.0)) { //update to all day travel and pay for difference
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain = rm - 0;
  	 				//System.out.println("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				price = (lastcost+twoHourZone12)-(allDayZone12 * discountrate);
  	 				CreateJourney.remain = rm - price;
  	 				//System.out.println("The travel pass has already update to All Day Pass! The cost is: $"+df.format(price)+" with discount");
@@ -335,25 +347,26 @@ public class TravelPass{
  	 				//System.out.println("The travel pass has already update to All Day Pass! The cost is: $"+df.format(price));
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "3";
+ 	 				
  	 			} 			
  
  			}else if ((lastcost+twoHourZone12)<allDayZone12) {
- 	 			if (User.memberslist.get(ID).gettype().equals("Senior") & day.equals("sun")) {
+ 	 			if (User.memberslist.get(ID).gettype().equals("senior") & day.equals("sun")) {
  	 				price = lastcost;
  	 				CreateJourney.remain = rm - 0;
  	 				//System.out.println("You don't need to pay on Sunday!");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
  	 				returncontent = "1";
  	 				
- 	 			}else if (User.memberslist.get(ID).gettype().equals("Junior") || User.memberslist.get(ID).gettype().equals("Senior") ) {
+ 	 			}else if (User.memberslist.get(ID).gettype().equals("junior") || User.memberslist.get(ID).gettype().equals("senior") ) {
  	 				price = twoHourZone12 * discountrate;
  	 				CreateJourney.remain = rm - price;
  	 				validtime = thisst + 200;
  					//System.out.println(durationtime +zone1 +"Travel Pass purchased for"+" "+ID+" "+"for"+" "+"$"+df.format(price));
  					//System.out.println("Valid until"+validtime);
  					//System.out.println("Credit remianing for"+" "+ID+" "+":"+"$"+CreateJourney.remain);
- 	 				returncontent = "2";
- 	 				
+                    returncontent = "6";
+                    
  	 			}else {
  	 				price = twoHourZone12;
  	 				CreateJourney.remain = rm - twoHourZone12; // calculate the remain
@@ -361,7 +374,8 @@ public class TravelPass{
  					//System.out.println(durationtime +zone1 +"Travel Pass purchased for"+" "+ID+" "+"for"+" "+"$"+df.format(price));
  					//System.out.println("Valid until"+validtime);
  					//System.out.println("Credit remianing for"+" "+ID+" "+":"+"$"+CreateJourney.remain);
- 	 				returncontent = "3";
+ 					returncontent = "7";
+ 					
  	 			}
 
 
@@ -370,6 +384,8 @@ public class TravelPass{
  	 				CreateJourney.remain =rm - 0;
  	 				//System.out.println("The All Day travel pass is still valid! You don't need to pay");
  	 				//System.out.println("Your remain credit is "+CreateJourney.remain);
+ 	 				returncontent = "4";
+ 	 				
  			}
  		}
 		return returncontent;

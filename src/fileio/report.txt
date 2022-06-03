@@ -1,0 +1,2 @@
+ID:lc,starttime:1200,arrivaltime:1300,startstation:Central,endstation:Richmond
+ID:lc,starttime:1300,arrivaltime:1900,startstation:Central,endstation:Epping
